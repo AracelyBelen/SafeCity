@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración | SafeCity{% endblock %}
+
+{% block content %}
+
+<div class="dash-header">
+
+    <div class="dash-brand-row">
+
+        <div class="brand">
+
+            <img
+                src="{{ url_for('static', filename='img/logo_safecity.png') }}"
+                alt="SafeCity"
+                class="brand-logo">
+
+        </div>
+        <span class="dash-brand-name">
+            SafeCity Admin
+        </span>
+
+    </div>
+
+    <div class="user-row">
+
+        <div class="avatar">
+            {{ current_user.username[:2]|upper }}
+        </div>
+
+        <span class="user-name">
+            {{ current_user.username }}
+        </span>
+
+        <a class="btn-logout"
+           href="{{ url_for('auth.logout') }}">
+
+            <i class="ti ti-logout" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>
+
+            Salir
+
+        </a>
+
+    </div>
+
+</div>
+
+<div class="dash-body">
+
+    <div class="dash-metrics">
+
+        <div class="metric m-blue">
+
+            <div class="metric-val">
+                {{ total_usuarios }}
+            </div>
+
+            <div class="metric-label">
+                Usuarios
+            </div>
+
+        </div>
+
+        <div class="metric m-green">
+
+            <div class="metric-val">
+                {{ total_reportes }}
+            </div>
+
+            <div class="metric-label">
+                Reportes
+            </div>
+
+        </div>
+
+        <div class="metric m-amber">
+
+            <div class="metric-val">
+                {{ total_categorias }}
+            </div>
+
+            <div class="metric-label">
+                Categorías
+            </div>
+
+        </div>
+
+        <div class="metric m-red">
+
+            <div class="metric-val">
+                {{ total_zonas }}
+            </div>
+
+            <div class="metric-label">
+                Zonas
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row mt-4 g-4">
+
+        <div class="col-lg-5">
+
+            <div class="admin-rcard h-100">
+
+                <div class="rcard-top">
+
+                    <span class="fw-semibold">
+
+                        <i class="ti ti-bolt me-2"></i>
+
+                        Accesos rápidos
+
+                    </span>
+
+                </div>
+
+                <div class="card-body admin-links">
+
+                <a href="/usuarios" class="admin-link-btn">
+                    <i class="ti ti-users"></i>
+                    Gestionar Usuarios
+                </a>
+
+                <a href="/categorias" class="admin-link-btn">
+                    <i class="ti ti-category"></i>
+                    Gestionar Categorías
+                </a>
+
+                <a href="/zonas" class="admin-link-btn">
+                    <i class="ti ti-map-pin"></i>
+                    Gestionar Zonas
+                </a>
+
+                <a href="{{ url_for('admin.reportes') }}"
+                class="admin-link-btn">
+                    <i class="ti ti-file-text"></i>
+                    Gestionar Reportes
+                </a>
+
+            </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-7">
+
+            <div class="rcard h-100">
+
+                <div class="rcard-top">
+
+                    <span class="fw-semibold">
+
+                        <i class="ti ti-chart-donut me-2"></i>
+
+                        Estadísticas generales
+
+                    </span>
+
+                </div>
+
+                <div class="p-3">
+
+                    <canvas id="graficoReportes"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('graficoReportes');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: [
+            'Usuarios',
+            'Reportes',
+            'Categorías',
+            'Zonas'
+        ],
+
+        datasets: [{
+
+            label: 'Cantidad',
+
+            data: [
+                Number("{{ total_usuarios }}"),
+                Number("{{ total_reportes }}"),
+                Number("{{ total_categorias }}"),
+                Number("{{ total_zonas }}")
+            ],
+
+            backgroundColor: [
+                '#3b82f6',
+                '#10b981',
+                '#f59e0b',
+                '#ef4444'
+            ],
+
+            borderRadius: 10,
+            borderSkipped: false,
+
+            barPercentage: 0.55,
+            categoryPercentage: 0.65
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+                display: false
+            }
+
+        },
+
+        scales: {
+
+            x: {
+
+                grid: {
+                    display: false
+                },
+
+                ticks: {
+                    color: "#ffffff"
+                }
+
+            },
+
+            y: {
+
+                beginAtZero: true,
+
+                ticks: {
+                    color: "#ffffff",
+                    stepSize: 1
+                },
+
+                grid: {
+                    color: "rgba(255,255,255,.08)"
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+{% endblock %}

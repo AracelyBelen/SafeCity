@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>
+
+    Mis Reportes
+
+</h1>
+
+<a href="{{ url_for('reportes.crear') }}"
+   class="btn btn-success mb-3">
+
+    Nuevo Reporte
+
+</a>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reporte in reportes %}
+        <tr>
+            <td>{{ reporte.id_reporte }}</td>
+            <td>{{ reporte.titulo }}</td>
+            <td>{{ reporte.descripcion }}</td>
+            <td>
+                {% if reporte.evidencias %}
+                    <img src="{{ url_for('static', filename='uploads/' + reporte.evidencias[0].archivo) }}" width="120" class="img-thumbnail">
+                {% else %}
+                    Sin imagen
+                {% endif %}
+            </td>
+            <td>
+
+                <a href="{{ url_for('reportes.editar', id=reporte.id_reporte) }}"
+                   class="btn btn-warning">
+
+                    Editar
+
+                </a>
+
+                <a href="{{ url_for('reportes.eliminar', id=reporte.id_reporte) }}"
+                   class="btn btn-danger">
+
+                    Eliminar
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

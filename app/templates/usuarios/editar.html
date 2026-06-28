@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Usuario | SafeCity{% endblock %}
+
+{% block content %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+
+            <h1 class="admin-title">
+
+                <i class="ti ti-edit me-2"></i>
+
+                Editar Usuario
+
+            </h1>
+
+            <p class="text-secondary mb-0">
+
+                Actualiza la información del usuario.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="admin-card form-card-admin">
+
+        <form method="POST">
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Nombre
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control admin-input"
+                    name="nombre"
+                    value="{{ usuario.nombre }}"
+                    required>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Apellido
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control admin-input"
+                    name="apellido"
+                    value="{{ usuario.apellido }}"
+                    required>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Nombre de usuario
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control admin-input"
+                    name="username"
+                    value="{{ usuario.username }}"
+                    required>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Correo electrónico
+                </label>
+
+                <input
+                    type="email"
+                    class="form-control admin-input"
+                    name="email"
+                    value="{{ usuario.email }}"
+                    required>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Rol
+                </label>
+
+                <select
+                    class="form-select admin-input"
+                    name="id_rol">
+
+                    {% for rol in roles %}
+
+                    <option
+                        value="{{ rol.id_rol }}"
+                        {% if rol.id_rol == usuario.id_rol %}selected{% endif %}>
+
+                        {{ rol.nombre }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+
+                <a href="{{ url_for('usuarios.listar') }}"
+                   class="btn btn-light rounded-pill px-4">
+
+                    Cancelar
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="admin-btn">
+
+                    <i class="ti ti-check me-1"></i>
+
+                    Actualizar
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

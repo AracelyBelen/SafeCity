@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Editar reporte | SafeCity{% endblock %}
+
+{% block content %}
+
+<div class="form-bg">
+
+    <div class="form-card">
+
+        <div class="form-top">
+
+            <div class="form-icon-box">
+                <i class="ti ti-edit" style="font-size:17px;color:#fff"></i>
+            </div>
+
+            <span class="form-title">
+                Editar reporte
+            </span>
+
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="form-body">
+
+                <div class="fg">
+
+                    <label>Categoría</label>
+
+                    <select name="id_categoria" required>
+
+                        {% for categoria in categorias %}
+
+                            <option
+                                value="{{ categoria.id_categoria }}"
+                                {% if categoria.id_categoria == reporte.id_categoria %}selected{% endif %}>
+
+                                {{ categoria.nombre }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="fg">
+
+                    <label>Descripción</label>
+
+                    <textarea
+                        name="descripcion"
+                        rows="4"
+                        required>{{ reporte.descripcion }}</textarea>
+
+                </div>
+
+                <div class="fg">
+
+                    <label>Zona</label>
+
+                    <select name="id_zona" required>
+
+                        {% for zona in zonas %}
+
+                            <option
+                                value="{{ zona.id_zona }}"
+                                {% if reporte.zonas and zona.id_zona == reporte.zonas[0].id_zona %}selected{% endif %}>
+
+                                {{ zona.nombre_zona }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                {% if reporte.evidencias %}
+
+                    <div class="fg">
+
+                        <label>Evidencia actual</label>
+
+                        {% set evidencia = reporte.evidencias[0] %}
+
+                        {% if evidencia.id_tipo_evidencia == 1 %}
+
+                            <img
+                                src="{{ url_for('static', filename='uploads/' ~ evidencia.archivo) }}"
+                                class="img-fluid rounded"
+                                style="max-height:250px; width:100%; object-fit:cover;">
+
+                        {% else %}
+
+                            <video
+                                controls
+                                class="w-100 rounded"
+                                style="max-height:250px;">
+
+                                <source
+                                    src="{{ url_for('static', filename='uploads/' ~ evidencia.archivo) }}"
+                                    type="video/mp4">
+
+                            </video>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+                <div class="fg">
+
+                    <label>Actualizar evidencia</label>
+
+                    <input
+                        type="file"
+                        name="evidencia"
+                        class="form-control"
+                        accept=".jpg,.jpeg,.png,.mp4">
+
+                    <small class="text-muted">
+
+                        Selecciona una nueva imagen o video solo si deseas reemplazar la evidencia actual.
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="form-foot">
+
+                <a
+                    href="{{ url_for('ciudadano.dashboard') }}"
+                    class="btn-cancel">
+
+                    <i class="ti ti-arrow-left"></i>
+                    Cancelar
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-submit">
+
+                    <i class="ti ti-device-floppy"></i>
+                    Guardar cambios
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

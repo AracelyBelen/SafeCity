@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio | SafeCity{% endblock %}
+
+{% block content %}
+
+<div class="hero">
+
+    <div class="hero-header">
+
+        <a href="{{ url_for('auth.login') }}" class="hn-login">
+            Iniciar sesión
+        </a>
+
+        <div class="brand">
+
+            <img
+                src="{{ url_for('static', filename='img/logo_safecity.png') }}"
+                alt="SafeCity"
+                class="brand-logo">
+
+            <span class="brand-text">
+                SafeCity
+            </span>
+
+        </div>
+
+        <a href="{{ url_for('auth.register') }}" class="hn-reg">
+            Registrarse
+        </a>
+
+    </div>
+
+        <p class="hero-sub">
+            Protegiendo nuestra comunidad
+        </p>
+
+        <div class="hero-btns">
+
+            <a href="{{ url_for('auth.login') }}" class="btn-white">
+                <i class="ti ti-plus"></i>
+                Reportar incidente
+            </a>
+
+            <a href="{{ url_for('estadisticas.estadisticas') }}"
+            class="btn-outline-w">
+                Conocer más
+            </a>
+
+        </div>
+
+    </div>
+    
+
+<div class="what">
+    <div class="eyebrow">Sobre la plataforma</div>
+
+    <div class="section-h">¿Qué es SafeCity?</div>
+
+    <p class="section-p">
+        SafeCity permite reportar incidentes de seguridad de manera rápida y anónima,
+        contribuyendo a construir una ciudad más segura para todos los ciudadanos de La Paz.
+    </p>
+</div>
+
+<div class="stats">
+    <div class="stat">
+        <div class="stat-n" id="total-reportes">
+            {{ total_reportes }}
+        </div>
+
+        <div class="stat-l">
+            Reportes totales
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-n" id="usuarios-activos">
+            {{ usuarios_activos }}
+        </div>
+
+        <div class="stat-l">
+            Usuarios activos
+        </div>
+    </div>
+</div>
+
+<div class="home-foot">
+    <p style="font-size:12px;color:#475569">
+        <i class="ti ti-map-pin" style="font-size:12px;vertical-align:-1px;margin-right:4px;color:#60a5fa"></i>
+        Datos actualizados en tiempo real
+    </p>
+</div>
+
+<div class="home-grid">
+
+    <div class="home-card">
+
+        <h3>
+            <i class="ti ti-alert-triangle"></i>
+            Últimos reportes
+        </h3>
+
+        <div id="ultimos-reportes">
+
+            <p>Cargando reportes...</p>
+
+        </div>
+
+    </div>
+
+    <div class="home-card">
+
+        <h3>
+            <i class="ti ti-map-pin"></i>
+            Zonas con más reportes
+        </h3>
+
+        <div id="top-zonas">
+
+            <p>Cargando estadísticas...</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    async function actualizarEstadisticas() {
+
+        try {
+
+            const respuesta = await fetch("/api/estadisticas");
+
+            const datos = await respuesta.json();
+
+            document.getElementById("total-reportes").textContent = datos.reportes;
+
+            document.getElementById("usuarios-activos").textContent = datos.usuarios;
+
+        } catch (error) {
+
+            console.error(
+                "Error al actualizar estadísticas:",
+                error
+            );
+
+        }
+    }
+
+    setInterval(actualizarEstadisticas, 30000);
+</script>
+
+<script>
+
+async function cargarUltimosReportes() {
+
+    try {
+
+        const respuesta = await fetch(
+            "/api/ultimos-reportes"
+        );
+
+        const datos = await respuesta.json();
+
+        const contenedor = document.getElementById(
+            "ultimos-reportes"
+        );
+
+        contenedor.innerHTML = "";
+
+        datos.forEach(function(reporte) {
+
+            const imagen = reporte.imagen
+                ? `<img src="${reporte.imagen}" class="report-thumb" alt="Evidencia">`
+                : `<div class="report-thumb-empty">
+                        <i class="ti ti-photo-off"></i>
+                   </div>`;
+
+            contenedor.innerHTML += `
+                <div class="report-item">
+
+                    ${imagen}
+
+                    <div class="report-info">
+
+                        <strong>${reporte.categoria}</strong>
+
+                        <p>${reporte.descripcion}</p>
+
+                        <small>
+                            <i class="ti ti-clock"></i>
+                            ${reporte.fecha}
+                        </small>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+
+async function cargarTopZonas() {
+
+    try {
+
+        const respuesta = await fetch(
+            "/api/top-zonas"
+        );
+
+        const datos = await respuesta.json();
+
+        const contenedor = document.getElementById(
+            "top-zonas"
+        );
+
+        contenedor.innerHTML = "";
+
+        const maximo = datos.length > 0
+            ? datos[0].total
+            : 1;
+
+        datos.forEach(function(zona) {
+
+            const porcentaje = (
+                zona.total / maximo
+            ) * 100;
+
+            contenedor.innerHTML += `
+                <div class="zona-bar">
+
+                    <div class="zona-header">
+
+                        <span>${zona.zona}</span>
+
+                        <strong>${zona.total}</strong>
+
+                    </div>
+
+                    <div class="zona-track">
+
+                        <div
+                            class="zona-fill"
+                            style="width:${porcentaje}%">
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+
+cargarUltimosReportes();
+cargarTopZonas();
+
+setInterval(actualizarEstadisticas, 30000);
+
+setInterval(cargarUltimosReportes, 300000);
+
+setInterval(cargarTopZonas, 30000);
+
+</script>
+
+<section class="home-footer">
+
+    <div class="footer-content">
+
+        <div class="footer-brand">
+
+            <div class="logo-row">
+
+                <div class="logo-box">
+                    <i class="ti ti-shield-check"
+                       style="font-size:18px;color:#fff"></i>
+                </div>
+
+                <span class="logo-text">SafeCity</span>
+
+            </div>
+
+            <p class="footer-text">
+                Plataforma comunitaria para el reporte de incidentes en las ciudades
+                de La Paz y El Alto. Juntos construimos entornos más seguros mediante
+                información confiable y actualizada.
+            </p>
+
+        </div>
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('estadisticas.estadisticas') }}">
+                ¿Cómo funciona?
+            </a>
+
+            <a href="{{ url_for('auth.login') }}">
+                Reportar incidente
+            </a>
+
+            <a href="{{ url_for('auth.register') }}">
+                Crear cuenta
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="footer-copy">
+
+        <i class="ti ti-map-pin"></i>
+
+        SafeCity · La Paz y El Alto · {{ current_year|default(2026) }}
+
+    </div>
+
+</section>
+
+{% endblock %}

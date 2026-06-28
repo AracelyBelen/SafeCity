@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+    Mapa General de Incidentes
+
+</h2>
+
+<div
+    id="map"
+    style="
+        height:700px;
+        width:100%;
+        border-radius:10px;
+    ">
+</div>
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+    const mapa = L.map("map").setView(
+        [-16.5, -68.15],
+        12
+    );
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            attribution: "© OpenStreetMap"
+        }
+    ).addTo(mapa);
+
+    const marcadores = JSON.parse('{{ marcadores | tojson | safe }}');
+
+    marcadores.forEach(function(item) {
+
+        L.marker([
+            item.latitud,
+            item.longitud
+        ])
+        .addTo(mapa)
+        .bindPopup(
+            "<b>" +
+            item.titulo +
+            "</b><br>" +
+            item.descripcion
+        );
+
+    });
+
+</script>
+
+{% endblock %}

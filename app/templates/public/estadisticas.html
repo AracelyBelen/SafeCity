@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Conocer más | SafeCity{% endblock %}
+
+{% block content %}
+
+<div class="container py-5 stats-container">
+
+    <div class="text-center mb-5">
+
+        <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill mb-3 stats-badge">
+
+            <i class="ti ti-users" style="font-size:20px;"></i>
+
+            <span class="fw-semibold">
+                {{ usuarios_activos }} usuarios confían en nosotros
+            </span>
+
+        </div>
+
+        <h2 class="fw-bold mb-3 stats-title">
+            Presencia en {{ total_zonas }} zonas de las ciudades de El Alto y La Paz
+        </h2>
+
+        <p class="stats-description mx-auto" style="max-width:700px;">
+            SafeCity ayuda a la comunidad a reportar incidentes, identificar zonas de riesgo y fortalecer la seguridad ciudadana mediante información actualizada en tiempo real.
+        </p>
+
+    </div>
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 stats-card h-100 text-center">
+
+                <div class="card-body p-4">
+
+                    <i class="ti ti-file-plus mb-3"
+                       style="font-size:42px;"></i>
+
+                    <h4 class="mb-3">
+                        Reporta un incidente
+                    </h4>
+
+                    <p class="mb-0">
+                        Selecciona una categoría, describe lo sucedido y adjunta evidencia.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 stats-card h-100 text-center">
+
+                <div class="card-body p-4">
+
+                    <i class="ti ti-map-pin mb-3"
+                       style="font-size:42px;"></i>
+
+                    <h4 class="mb-3">
+                        Comparte la ubicación
+                    </h4>
+
+                    <p class="mb-0">
+                        Utiliza tu ubicación actual o selecciona el punto exacto en el mapa.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 stats-card h-100 text-center">
+
+                <div class="card-body p-4">
+
+                    <i class="ti ti-camera mb-3"
+                       style="font-size:42px;"></i>
+
+                    <h4 class="mb-3">
+                        Adjunta evidencia
+                    </h4>
+
+                    <p class="mb-0">
+                        Agrega fotografías o videos para complementar el reporte.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card border-0 stats-card mb-5">
+
+        <div class="card-body p-4">
+
+            <h3 class="mb-4">
+
+                <i class="ti ti-lock-shield me-2"></i>
+
+                Privacidad y seguridad
+
+            </h3>
+
+            <ul class="list-unstyled mb-0">
+
+                <li class="mb-3">
+
+                    <i class="ti ti-check stats-check me-2"></i>
+
+                    Tu información personal no se muestra públicamente.
+
+                </li>
+
+                <li class="mb-3">
+
+                    <i class="ti ti-check stats-check me-2"></i>
+
+                    La ubicación se utiliza únicamente para georreferenciar incidentes.
+
+                </li>
+
+                <li class="mb-3">
+
+                    <i class="ti ti-check stats-check me-2"></i>
+
+                    Las evidencias se almacenan de forma segura.
+
+                </li>
+
+                <li>
+
+                    <i class="ti ti-check stats-check me-2"></i>
+
+                    Los datos recopilados se utilizan con fines estadísticos.
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="mb-4">
+
+        <h3 class="mb-4">
+
+            <i class="ti ti-chart-bar me-2" style="color:#2563eb;"></i>
+
+            Estadísticas en tiempo real
+
+        </h3>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 stats-card text-center h-100">
+
+                <div class="card-body py-4">
+
+                    <h5 class="text-secondary">
+                        Reportes
+                    </h5>
+
+                    <h2 class="fw-bold stats-number">
+                        {{ total_reportes }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 stats-card text-center h-100">
+
+                <div class="card-body py-4">
+
+                    <h5 class="text-secondary">
+                        Categorías
+                    </h5>
+
+                    <h2 class="fw-bold stats-number">
+                        {{ total_categorias }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 stats-card text-center h-100">
+
+                <div class="card-body py-4">
+
+                    <h5 class="text-secondary">
+                        Zonas
+                    </h5>
+
+                    <h2 class="fw-bold stats-number">
+                        {{ total_zonas }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <p class="text-center stats-update mt-4 mb-0">
+
+        <i class="ti ti-clock-hour-4 me-1"></i>
+
+        Los datos se actualizan automáticamente conforme se registran nuevos reportes.
+
+    </p>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block navbar %}{% endblock %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+
+<div class="auth-bg">
+
+    <div class="auth-card">
+
+        <div class="brand">
+
+            <img
+                src="{{ url_for('static', filename='img/logo_safecity.png') }}"
+                alt="SafeCity"
+                class="brand-logo">
+
+            <span class="brand-text">
+                SafeCity
+            </span>
+
+        </div>
+
+        <div class="auth-h">Bienvenido</div>
+
+        <div class="auth-sub">
+            Ingresa tus datos para continuar
+        </div>
+
+        <form method="POST">
+
+            <div class="field">
+                <label>Usuario o Correo electrónico</label>
+
+                <input type="text"
+                       name="login"
+                       placeholder="Ingresa tu usuario o tu@correo.com"
+                       required>
+            </div>
+
+            <div class="field">
+                <label>Contraseña</label>
+
+                <div class="password-box">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="••••••••"
+                        required>
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('password', this)">
+
+                        <i class="ti ti-eye"></i>
+
+                    </button>
+
+                </div>
+            </div>
+
+            <button type="submit" class="btn-auth">
+                Ingresar
+            </button>
+
+        </form>
+
+        <div class="auth-foot">
+            ¿No tienes cuenta?
+
+            <a class="auth-link"
+               href="{{ url_for('auth.register') }}">
+                Regístrate gratis
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function togglePassword(inputId, button) {
+
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector("i");
+
+    if (input.type === "password") {
+
+        input.type = "text";
+        icon.className = "ti ti-eye-off";
+
+    } else {
+
+        input.type = "password";
+        icon.className = "ti ti-eye";
+    }
+}
+</script>
+
+{% endblock %}

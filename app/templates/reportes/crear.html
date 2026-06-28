@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo Reporte | SafeCity{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+
+<div class="form-bg">
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          class="form-card">
+
+        <div class="form-top">
+
+            <div class="form-icon-box">
+                <i class="ti ti-file-plus" style="font-size:17px;color:#fff"></i>
+            </div>
+
+            <span class="form-title">
+                Nuevo Reporte
+            </span>
+
+        </div>
+
+            <div class="fg">
+                <label>Categoría</label>
+
+                <select name="id_categoria" required>
+
+                    {% for categoria in categorias %}
+
+                    <option value="{{ categoria.id_categoria }}">
+                        {{ categoria.nombre }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <div class="fg">
+                <label>Zona</label>
+
+                <select name="id_zona" required>
+
+                    {% for zona in zonas %}
+
+                    <option value="{{ zona.id_zona }}">
+                        {{ zona.nombre_zona }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <div class="fg">
+                <label>Descripción</label>
+
+                <textarea name="descripcion"
+                          placeholder="Describe el incidente con el mayor detalle posible..."
+                          required></textarea>
+            </div>
+
+            <div class="fdiv"></div>
+
+            <div class="fg">
+
+                <label>Ubicación</label>
+
+                <div class="alert alert-info">
+                    Si el incidente ocurrió en otro lugar, ignora "Usar mi ubicación actual" y selecciona manualmente el punto en el mapa.
+                </div>
+
+                <div class="loc-btns">
+
+                    <button type="button"
+                            id="btnUbicacion"
+                            class="loc-btn-green">
+
+                        <i class="ti ti-current-location" style="font-size:17px"></i>
+
+                        Obtener ubicación actual
+
+                    </button>
+
+                    <button type="button"
+                            id="btnSeleccionar"
+                            class="loc-btn-blue">
+
+                        <i class="ti ti-map-pin" style="font-size:17px"></i>
+
+                        Seleccionar ubicación
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <input type="hidden"
+                   id="latitud"
+                   name="latitud">
+
+            <input type="hidden"
+                   id="longitud"
+                   name="longitud">
+
+            <div id="map-container" style="display:none; margin-top:18px;">
+
+                <div class="alert alert-info mb-3">
+                    Haz clic en el mapa para seleccionar la ubicación del incidente.
+                </div>
+
+                <div id="map"
+                    style="height:350px;width:100%;border-radius:16px;">
+                </div>
+
+            </div>
+
+            <div class="fdiv"></div>
+
+            <div class="fg">
+
+                <label>Adjuntar evidencia</label>
+
+                <div class="upload-col">
+
+                    <label class="uz" for="evidenciaImagen">
+
+                        <div id="preview-imagen"></div>
+
+                        <i class="ti ti-photo preview-icon"></i>
+
+                        <div class="uz-label">
+                            Seleccionar imagen
+                        </div>
+
+                        <div class="uz-hint">
+                            JPG o PNG
+                        </div>
+
+                    </label>
+
+                    <input
+                        id="evidenciaImagen"
+                        type="file"
+                        name="evidencia_imagen"
+                        accept=".jpg,.jpeg,.png"
+                        multiple
+                        style="display:none">
+
+                    <label class="uz uz-video" for="evidenciaVideo">
+
+                        <div id="preview-video"></div>
+
+                        <i class="ti ti-video preview-icon"></i>
+
+                        <div class="uz-label">
+                            Seleccionar video
+                        </div>
+
+                        <div class="uz-hint">
+                            MP4
+                        </div>
+
+                    </label>
+
+                    <input
+                        id="evidenciaVideo"
+                        type="file"
+                        name="evidencia_video"
+                        accept=".mp4"
+                        style="display:none">
+
+                    <div class="vid-note">
+
+                        <i class="ti ti-info-circle"></i>
+
+                        <span>
+                            Puedes adjuntar hasta <strong>5 imágenes</strong> o <strong>1 imagen + 1 video</strong>.
+                            Solo se permite <strong>un video</strong> por reporte.
+                            Duración: <strong>25 a 30 segundos</strong> máximo.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </div>
+
+        <div class="form-foot">
+
+            <a href="{{ url_for('ciudadano.dashboard') }}"
+               class="btn-cancel">
+
+                <i class="ti ti-x"
+                   style="font-size:13px;vertical-align:-1px;margin-right:5px"></i>
+
+                Cancelar
+
+            </a>
+
+            <button type="submit"
+                    class="btn-submit">
+
+                <i class="ti ti-send"
+                   style="font-size:14px"></i>
+
+                Enviar reporte
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="{{ url_for('static', filename='js/mapa_reportes.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/mapa_reportes.js') }}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const inputImagen = document.getElementById("evidenciaImagen");
+    const inputVideo = document.getElementById("evidenciaVideo");
+
+    const previewImagen = document.getElementById("preview-imagen");
+    const previewVideo = document.getElementById("preview-video");
+
+    inputImagen.addEventListener("change", function () {
+
+        previewImagen.innerHTML = "";
+
+        const icono = previewImagen.parentElement
+            .querySelector(".preview-icon");
+
+        if (this.files.length === 0) {
+
+            icono.style.display = "block";
+            return;
+        }
+
+        icono.style.display = "none";
+
+        const archivo = this.files[0];
+
+        const url = URL.createObjectURL(archivo);
+
+        previewImagen.innerHTML = `
+            <img src="${url}" class="preview-media">
+        `;
+    });
+
+    inputVideo.addEventListener("change", function () {
+
+        previewVideo.innerHTML = "";
+
+        const icono = previewVideo.parentElement
+            .querySelector(".preview-icon");
+
+        if (this.files.length === 0) {
+
+            icono.style.display = "block";
+            return;
+        }
+
+        icono.style.display = "none";
+
+        const archivo = this.files[0];
+
+        const url = URL.createObjectURL(archivo);
+
+        previewVideo.innerHTML = `
+            <video class="preview-media" controls>
+                <source src="${url}" type="${archivo.type}">
+            </video>
+        `;
+    });
+
+});
+</script>
+{% endblock %}
