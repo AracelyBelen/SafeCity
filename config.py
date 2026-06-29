@@ -5,7 +5,9 @@ class Config:
 
     SECRET_KEY = "safecity_secret_key"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///safecity.db"
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, "instance", "safecity.db")
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
